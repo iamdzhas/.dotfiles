@@ -135,3 +135,4 @@ eval "$(pyenv init - bash)"
 
 # Local secrets (API keys etc.) — kept out of this tracked repo, see ~/.zshrc.local
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+alias orange-canvas=~/orange-venv/bin/orange-canvas

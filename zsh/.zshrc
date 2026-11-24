@@ -1,5 +1,7 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# User binaries (nvim, fd, uv and others live here). zsh does not read ~/.profile,
+# so the path has to be added here; typeset -U drops duplicate entries.
+typeset -U path
+path=("$HOME/.local/bin" $path)
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -102,8 +104,10 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-eval "$(starship init zsh)"
+command -v starship >/dev/null && eval "$(starship init zsh)"
 bindkey -v
+# Wait 0.2 s after Esc (default 0.4 s); still long enough for the jj binding below
+KEYTIMEOUT=20
 bindkey '^R' history-incremental-search-backward
 bindkey -M viins 'jj' vi-cmd-mode
 
@@ -122,7 +126,7 @@ zle -N zle-keymap-select
 echo -ne '\e[5 q'
 preexec() { echo -ne '\e[5 q'; }
 
-. "$HOME/.local/share/../bin/env"
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -130,7 +134,7 @@ export NVM_DIR="$HOME/.config/nvm"
 
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - bash)"
+command -v pyenv >/dev/null && eval "$(pyenv init - zsh)"
 
 
 # Local secrets (API keys etc.) — kept out of this tracked repo, see ~/.zshrc.local
